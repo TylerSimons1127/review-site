@@ -4,485 +4,306 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tyler Simons — Product Reviews</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='4' fill='%235e6ad2'/><text x='3' y='12' font-size='11' font-family='sans-serif' font-weight='600' fill='white'>T</text></svg>">
+<meta name="description" content="Independent, hands-on product reviews by Tyler Simons, a 15-year-old developer and maker.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ===== LINEAR-TOKENS + BIG-EFFECTS layer ===== */
 :root{
-  --bg:#08090a;          /* marketing black */
-  --bg-panel:#0f1011;     /* panel dark */
-  --bg-surface:#141517;   /* elevated surface */
-  --bg-surface-2:#191a1b; /* card / dropdown */
-  --line:rgba(255,255,255,0.08);     /* standard border */
-  --line-weak:rgba(255,255,255,0.05); /* subtle border */
-  --line-faint:rgba(255,255,255,0.03);
-  --ink:#f7f8f8;          /* primary text */
-  --silver:#d0d6e0;       /* body text */
-  --muted:#8a8f98;        /* tertiary */
-  --faint:#62666d;        /* quaternary */
-  --accent:#5e6ad2;       /* brand indigo */
-  --accent-hi:#7170ff;    /* interactive */
-  --accent-hover:#828fff; /* hover */
-  --success:#27a644;
-  --success-2:#10b981;
-  --radius-sm:6px;
-  --radius:8px;
-  --radius-lg:12px;
-  --radius-xl:16px;
-  --maxw:1200px;
-  --maxw-text:62ch;
-  --glass:rgba(255,255,255,0.05);
-  --glass-2:rgba(255,255,255,0.08);
+  --paper:#f4f1ea;        /* warm off-white */
+  --paper-2:#ece7dc;      /* card surface */
+  --ink:#1c1a17;          /* near-black warm */
+  --ink-soft:#4a453d;
+  --muted:#7a7367;
+  --line:#d8d1c4;
+  --line-strong:#c3bbac;
+  --accent:#9c4a2f;       /* restrained terracotta, not neon/indigo */
+  --accent-2:#3a5a40;     /* deep moss for positive */
+  --radius:4px;
+  --maxw:1080px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  background:var(--bg);
+  background:var(--paper);
   color:var(--ink);
-  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  font-feature-settings:'cv01','ss03';
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  font-size:17px;line-height:1.65;
   -webkit-font-smoothing:antialiased;
-  font-size:16px;
-  line-height:1.6;
   overflow-x:hidden;
 }
 ::selection{background:var(--accent);color:#fff}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:500;letter-spacing:-.01em;line-height:1.08}
+a{color:inherit}
+img{max-width:100%;display:block}
 
-/* ===== animated gradient mesh + noise (big effect) ===== */
-.bg-mesh{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
-.bg-mesh span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;mix-blend-mode:screen;animation:drift 22s ease-in-out infinite alternate}
-.bg-mesh .m1{width:55vw;height:55vw;left:-12vw;top:-15vh;background:radial-gradient(circle,#3a3f9e,transparent 60%)}
-.bg-mesh .m2{width:45vw;height:45vw;right:-10vw;top:8vh;background:radial-gradient(circle,#1f7a5e,transparent 60%);animation-delay:-6s}
-.bg-mesh .m3{width:50vw;height:50vw;left:18vw;bottom:-20vh;background:radial-gradient(circle,#6d3ffb,transparent 60%);animation-delay:-12s}
-.bg-mesh .m4{width:35vw;height:35vw;right:12vw;bottom:5vh;background:radial-gradient(circle,#4b3f9e,transparent 60%);animation-delay:-3s}
-@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(4vw,3vh) scale(1.12)}100%{transform:translate(-3vw,-2vh) scale(.95)}}
-.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.cursor-glow{position:fixed;width:480px;height:480px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(113,112,255,.13),transparent 65%);transform:translate(-50%,-50%);transition:opacity .4s;left:-9999px;top:-9999px;mix-blend-mode:screen}
-
-/* ===== nav — liquid glass ===== */
+/* nav */
 .nav{
-  position:sticky;top:0;z-index:50;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 32px;
-  background:rgba(10,11,14,0.55);
-  backdrop-filter:blur(20px) saturate(160%);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border-bottom:1px solid var(--line-weak);
+  position:sticky;top:0;z-index:40;
+  border-bottom:1px solid var(--line);
+  background:rgba(244,241,234,.86);
+  backdrop-filter:blur(10px);
 }
-.brand{display:flex;align-items:center;gap:10px;font-weight:500;letter-spacing:-.01em;font-size:15px;color:var(--ink)}
-.brand .logo{
-  width:28px;height:28px;border-radius:var(--radius-sm);
-  background:var(--accent);
-  display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:#img;
-}
-.nav-links{display:flex;gap:28px;align-items:center}
-.nav-links a{
-  color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
-  letter-spacing:.01em;transition:color .2s;
-}
-.nav-links a:hover{color:var(--ink)}
-.nav-cta{
-  padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;color:#fff;
-  background:var(--accent);text-decoration:none;
-  transition:background .2s;
-}
-.nav-cta:hover{background:var(--accent-hi)}
-.menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--silver);border-radius:var(--radius-sm);padding:6px 10px;font-size:16px;cursor:pointer}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Fraunces',serif;font-size:19px;font-weight:600;letter-spacing:-.02em}
+.brand span{color:var(--accent)}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{border:1px solid var(--ink);border-radius:999px;padding:8px 18px;color:var(--ink)!important}
+.nav-cta:hover{background:var(--ink);color:var(--paper)!important}
 
-/* ===== hero ===== */
-.hero{
-  max-width:var(--maxw);margin:0 auto;
-  padding:140px 32px 100px;
-}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:5px 12px;border-radius:999px;font-size:12px;font-weight:500;color:var(--muted);
-  background:transparent;border:1px solid var(--line);
-  margin-bottom:28px;letter-spacing:.02em;
-}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--success)}
-.hero h1{
-  font-size:clamp(36px,6vw,68px);font-weight:500;line-height:1.05;letter-spacing:-.035em;
-  max-width:16ch;margin-bottom:24px;
-}
-.hero p.sub{
-  max-width:56ch;font-size:clamp(15px,1.8vw,18px);color:var(--muted);margin-bottom:36px;font-weight:400;line-height:1.65;
-}
-.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
-.hero-mail{display:inline-block;margin-top:22px;color:var(--muted);font-size:14px;text-decoration:none;font-family:'JetBrains Mono',monospace;transition:color .25s}
-.hero-mail:hover{color:var(--accent-hi)}
-
-/* ===== buttons — glass + magnetic ===== */
-.btn{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:13px 24px;border-radius:999px;font-size:14px;font-weight:500;
-  cursor:pointer;text-decoration:none;will-change:transform;
-  transition:background .2s,transform .18s cubic-bezier(.2,.8,.2,1),border-color .2s,box-shadow .25s;
-  border:1px solid transparent;
-}
+/* hero — editorial, asymmetric, no center stack */
+.hero{max-width:var(--maxw);margin:0 auto;padding:90px 24px 70px;display:grid;grid-template-columns:1.5fr 1fr;gap:56px;align-items:end}
+.hero .kicker{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:22px}
+.hero h1{font-size:clamp(38px,6vw,68px);font-weight:500;margin-bottom:24px;text-wrap:pretty}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero p.lead{font-size:19px;color:var(--ink-soft);max-width:34ch;margin-bottom:30px}
+.hero .actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:999px;font-size:14.5px;font-weight:500;text-decoration:none;cursor:pointer;transition:background .2s,color .2s,transform .15s;border:1px solid transparent}
 .btn:active{transform:scale(.98)}
-.btn-primary{color:#fff;background:linear-gradient(135deg,var(--accent-hover),var(--accent));box-shadow:0 6px 24px rgba(94,106,210,.4),inset 0 1px 0 rgba(255,255,255,.25)}
-.btn-primary:hover{background:linear-gradient(135deg,var(--accent-hover),var(--accent));box-shadow:0 10px 36px rgba(113,112,255,.6),inset 0 1px 0 rgba(255,255,255,.3);transform:translateY(-2px)}
-.btn-ghost{color:var(--ink);background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(12px)}
-.btn-ghost:hover{background:var(--glass-2);border-color:rgba(255,255,255,.18)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#823a22}
+.btn-line{border-color:var(--line-strong);color:var(--ink)}
+.btn-line:hover{border-color:var(--ink)}
+.hero-aside{border-left:1px solid var(--line);padding-left:28px}
+.hero-aside .who{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink-soft);margin-bottom:18px}
+.hero-aside .email{font-size:14px;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:2px}
+.hero-aside .email:hover{color:var(--accent);border-color:var(--accent)}
 
-/* ===== marquee — subtle ===== */
-.marquee{
-  overflow:hidden;white-space:nowrap;padding:20px 0;
-  border-top:1px solid var(--line-weak);border-bottom:1px solid var(--line-weak);
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);
-}
-.marquee-track{
-  display:inline-flex;gap:48px;
-  animation:scroll 40s linear infinite;
-  font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--faint);letter-spacing:.06em;
-}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* section frame */
+section{max-width:var(--maxw);margin:0 auto;padding:70px 24px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:40px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.sec-head .num{font-family:'Fraunces',serif;font-style:italic;color:var(--accent);font-size:15px}
+.sec-head h2{font-size:clamp(26px,3.5vw,38px)}
+.sec-head .note{margin-left:auto;color:var(--muted);font-size:14px;max-width:30ch;text-align:right}
 
-/* ===== section scaffolding ===== */
-section{padding:100px 32px;max-width:var(--maxw);margin:0 auto}
-.sec-head{margin-bottom:48px;max-width:var(--maxw-text)}
-.sec-head .kicker{
-  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-hi);
-  letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;font-weight:500;
+/* review list — editorial rows, not card grid */
+.review{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.review-row{
+  display:grid;grid-template-columns:220px 1fr auto;gap:32px;align-items:center;
+  padding:34px 0;border-top:1px solid var(--line);cursor:pointer;
+  transition:background .25s;
 }
-.sec-head h2{font-size:clamp(28px,4vw,42px);font-weight:500;letter-spacing:-.025em;line-height:1.1;margin-bottom:14px}
-.sec-head p{color:var(--muted);font-size:16px;max-width:52ch;line-height:1.6}
+.review-row:last-child{border-bottom:1px solid var(--line)}
+.review-row:hover{background:var(--paper-2)}
+.review-row .thumb{width:220px;height:150px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper-2)}
+.review-row .thumb.typo{display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--muted);text-align:center;padding:14px}
+.review-row .body h3{font-size:23px;margin-bottom:6px}
+.review-row .body .meta{color:var(--muted);font-size:14.5px;margin-bottom:10px}
+.review-row .body .blurb{color:var(--ink-soft);font-size:15.5px;max-width:52ch}
+.review-row .rating{font-family:'Fraunces',serif;font-size:15px;color:var(--accent);white-space:nowrap;text-align:right}
+.review-row .rating .score{display:block;font-size:30px;color:var(--ink);line-height:1;margin-bottom:4px}
+.review-row .arrow{transition:transform .25s;color:var(--accent)}
+.review-row:hover .arrow{transform:translateX(5px)}
 
-/* ===== bento grid — asymmetric + glass + spotlight ===== */
-.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-.card{
-  position:relative;padding:24px;border-radius:var(--radius-lg);
-  background:var(--glass);border:1px solid var(--line);
-  backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
-  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s;
-  cursor:pointer;display:flex;flex-direction:column;overflow:hidden;
-}
-.card::before{
-  content:'';position:absolute;inset:0;opacity:0;transition:opacity .45s;pointer-events:none;
-  background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),rgba(113,112,255,.16),transparent 60%);
-}
-.card:hover{transform:translateY(-6px);border-color:rgba(113,112,255,.4)}
-.card:hover::before{opacity:1}
-.card .glow{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,var(--accent-hi),transparent 70%);filter:blur(45px);opacity:.14;right:-30px;top:-30px;transition:opacity .4s}
-.card:hover .glow{opacity:.36}
-.card.tall{grid-column:span 6;grid-row:span 2}
-.card.wide{grid-column:span 6}
-.card.half{grid-column:span 6}
-.card-tag{
-  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--accent-hi);margin-bottom:12px;font-weight:500;
-}
-.card h3{font-size:20px;font-weight:500;letter-spacing:-.015em;margin-bottom:6px}
-.card .meta{color:var(--muted);font-size:13px;margin-bottom:16px}
-.rating{display:flex;gap:2px;font-size:14px;color:var(--accent-hi);margin-bottom:16px;letter-spacing:1px}
-.rating .off{color:var(--faint)}
-.card-thumb{
-  flex:1;border-radius:var(--radius);margin-top:auto;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
-  min-height:140px;border:1px solid var(--line-weak);
-  background:var(--bg-panel);text-align:center;padding:16px;line-height:1.5;
-}
-.card-arrow{
-  margin-top:16px;font-size:13px;color:var(--accent-hi);font-weight:500;
-  display:inline-flex;gap:6px;transition:gap .25s;
-}
-.card:hover .card-arrow{gap:11px}
-
-/* ===== stats — glass ===== */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.stat{
-  padding:24px;border-radius:var(--radius-lg);
-  background:var(--glass);border:1px solid var(--line);
-  backdrop-filter:blur(14px);text-align:left;transition:transform .4s,border-color .4s;
-}
-.stat:hover{transform:translateY(-5px);border-color:rgba(113,112,255,.35)}
-.stat .num{font-size:38px;font-weight:500;letter-spacing:-.03em;color:var(--ink)}
-.stat .lbl{color:var(--muted);font-size:13px;margin-top:4px}
-
-/* ===== about ===== */
-.about-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:start}
-.about p{color:var(--silver);font-size:15px;margin-bottom:14px;line-height:1.65}
+/* about — two column, real bio */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.about p{color:var(--ink-soft);margin-bottom:16px}
 .about p strong{color:var(--ink);font-weight:500}
-.about .hl{color:var(--accent-hi);font-weight:500}
-.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.stack span{
-  font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 12px;border-radius:var(--radius-sm);
-  background:var(--bg-surface);border:1px solid var(--line);color:var(--silver);letter-spacing:.02em;
-}
-.about-card{
-  padding:28px;border-radius:var(--radius-lg);
-  background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(16px);
-}
-.about-card h4{
-  font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;
-  letter-spacing:.06em;margin-bottom:16px;text-transform:uppercase;font-weight:500;
-}
-.about-card ul{list-style:none}
-.about-card li{color:var(--silver);font-size:14px;padding:8px 0;border-bottom:1px solid var(--line-weak);display:flex;gap:10px;line-height:1.5}
-.about-card li:last-child{border:none}
-.about-card li .chk{color:var(--success);flex-shrink:0;font-weight:600}
+.about .pull{font-family:'Fraunces',serif;font-style:italic;font-size:21px;line-height:1.4;color:var(--ink);border-left:2px solid var(--accent);padding-left:18px;margin:8px 0 24px}
+.stack{display:div;flex-wrap:wrap;gap:8px;margin-top:18px}
+.stack span{font-size:12.5px;padding:6px 12px;border:1px solid var(--line-strong);border-radius:999px;color:var(--ink-soft)}
+.facts{border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.facts h4{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-weight:600}
+.facts ul{list-style:none}
+.facts li{padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;display:flex;justify-content:space-between;gap:16px}
+.facts li:last-child{border:none}
+.facts li b{font-weight:500;color:var(--ink)}
+.facts li span{color:var(--muted)}
 
-/* ===== contact — liquid glass ===== */
-.contact-card{
-  padding:48px;border-radius:var(--radius-xl);
-  background:linear-gradient(150deg,rgba(94,106,210,.14),rgba(16,185,129,.08));
-  border:1px solid rgba(113,112,255,.3);
-  backdrop-filter:blur(20px);text-align:center;position:relative;overflow:hidden;
-}
-.contact-card::after{content:'';position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,var(--accent-hi),transparent 70%);filter:blur(90px);opacity:.25;top:-110px;left:50%;transform:translateX(-50%)}
-.contact-card h2{font-size:clamp(24px,3.5vw,36px);font-weight:500;letter-spacing:-.025em;margin-bottom:12px}
-.contact-card p{color:var(--silver);max-width:48ch;margin:0 auto 28px;font-size:15px}
-.contact-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
-.contact-actions a.mail{
-  color:var(--accent-hi);font-family:'JetBrains Mono',monospace;font-size:14px;
-  text-decoration:none;border-bottom:1px solid rgba(113,112,255,.3);padding-bottom:2px;
-  transition:border-color .2s,color .2s;
-}
-.contact-actions a.mail:hover{color:#fff;border-color:rgba(113,112,255,.6)}
-form{display:grid;gap:12px;max-width:500px;margin:0 auto;text-align:left}
-input,textarea{
-  width:100%;padding:12px 16px;border-radius:var(--radius);font-family:inherit;font-size:14px;
-  color:var(--ink);background:var(--bg-panel);border:1px solid var(--line);
-  outline:none;transition:border-color .2s;
-}
-input::placeholder,textarea::placeholder{color:var(--faint)}
-input:focus,textarea:focus{border-color:var(--accent)}
-textarea{resize:vertical;min-height:100px}
+/* contact */
+.contact{border:1px solid var(--line);border-radius:var(--radius);padding:48px;background:var(--paper-2);text-align:center}
+.contact h2{font-size:clamp(26px,3.5vw,38px);margin-bottom:12px}
+.contact p{color:var(--ink-soft);max-width:46ch;margin:0 auto 26px}
+.contact .actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.contact form{display:grid;gap:12px;max-width:480px;margin:0 auto;text-align:left}
+.contact input,.contact textarea{width:100%;padding:13px 15px;border:1px solid var(--line-strong);border-radius:var(--radius);background:var(--paper);font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .2s}
+.contact input:focus,.contact textarea:focus{border-color:var(--accent)}
+.contact textarea{resize:vertical;min-height:96px}
 
-/* ===== footer ===== */
-footer{
-  padding:40px 32px;border-top:1px solid var(--line-weak);
-  max-width:var(--maxw);margin:0 auto;
-  color:var(--faint);font-size:12px;
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
-}
-footer a{color:var(--muted);text-decoration:none;transition:color .2s}
-footer a:hover{color:var(--ink)}
+footer{max-width:var(--maxw);margin:0 auto;padding:40px 24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px}
+footer a{color:var(--ink-soft);text-decoration:none}
+footer a:hover{color:var(--accent)}
 
-/* ===== reveal animation — subtle ===== */
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
-.reveal.in{opacity:1;transform:translateY(0)}
+/* reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
 
-/* ===== modal ===== */
-.modal-bg{
-  position:fixed;inset:0;z-index:100;
-  background:rgba(2,3,5,.75);backdrop-filter:blur(6px);
-  display:none;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto;
-}
+/* modal */
+.modal-bg{position:fixed;inset:0;z-index:100;background:rgba(28,26,23,.6);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:60px 18px;overflow-y:auto}
 .modal-bg.open{display:flex;animation:fade .25s}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.modal{
-  max-width:720px;width:100%;background:var(--bg-panel);border:1px solid var(--line);
-  border-radius:var(--radius-xl);overflow:hidden;
-  box-shadow:0 24px 60px rgba(0,0,0,.5);
-  animation:rise .35s cubic-bezier(.2,.8,.2,1);
-}
-@keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-banner{
-  height:120px;display:flex;align-items:flex-end;padding:20px 28px;position:relative;
-  background:var(--bg-surface);border-bottom:1px solid var(--line-weak);
-}
-.modal-banner .badge{
-  position:absolute;top:16px;right:20px;font-family:'JetBrains Mono',monospace;font-size:11px;
-  padding:5px 10px;border-radius:999px;background:rgba(0,0,0,.3);border:1px solid var(--line);
-  color:var(--silver);letter-spacing:.03em;
-}
-.modal-body{padding:28px 32px 36px;position:relative}
-.modal-body .mclose{
-  position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:50%;
-  border:1px solid var(--line);background:transparent;color:var(--muted);font-size:18px;
-  cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s;
-}
-.modal-body .mclose:hover{background:rgba(255,255,255,.06);color:var(--ink)}
-.modal h2{font-size:24px;font-weight:500;letter-spacing:-.02em;margin-bottom:4px}
-.modal .m-meta{color:var(--muted);font-size:13px;margin-bottom:20px}
-.verdict{
-  display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:var(--radius);
-  background:var(--bg-surface);border:1px solid var(--line);margin-bottom:22px;font-size:14px;font-weight:500;
-}
-.verdict .score{font-family:'JetBrains Mono',monospace;color:var(--accent-hi);font-size:15px}
-.modal h3{font-size:16px;font-weight:500;margin:24px 0 10px;letter-spacing:-.01em}
-.modal p{color:var(--silver);font-size:14.5px;margin-bottom:12px;line-height:1.65}
-.specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
-.specs div{background:var(--bg-surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;font-size:13px}
-.specs div .k{color:var(--faint);font-size:11px;font-family:'JetBrains Mono',monospace;display:block;margin-bottom:3px;letter-spacing:.03em}
-.specs div .v{color:var(--ink);font-weight:500}
-.proscons{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
-.proscons .pc{padding:14px;border-radius:var(--radius);background:var(--bg-surface);border:1px solid var(--line)}
-.proscons .pc h4{font-size:12px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em;text-transform:uppercase;font-weight:500}
-.proscons .pc.pros h4{color:var(--success)}
-.proscons .pc.cons h4{color:#d26666}
-.proscons .pc ul{list-style:none;font-size:13px;color:var(--silver)}
-.proscons .pc li{padding:4px 0;display:flex;gap:8px;line-height:1.5}
-.proscons .pc.pros li::before{content:'+';color:var(--success);font-weight:600}
-.proscons .pc.cons li::before{content:'−';color:#d26666}
-.pull{
-  font-size:17px;font-weight:400;line-height:1.55;color:var(--ink);
-  border-left:2px solid var(--accent);padding:4px 0 4px 18px;margin:20px 0;
-}
-.img-note{font-size:11px;color:var(--faint);font-family:'JetBrains Mono',margin-top:8px;line-height:1.5}
-.review-tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:var(--bg-surface);border:1px solid var(--line);color:var(--muted);margin-bottom:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.03em}
+.modal{max-width:680px;width:100%;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--radius);overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.25);animation:rise .35s ease}
+@keyframes rise{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.modal .mclose{position:absolute;top:16px;right:18px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-soft);font-size:18px;cursor:pointer;z-index:2}
+.modal .mclose:hover{background:var(--paper-2)}
+.modal-himg{height:240px;overflow:hidden;border-bottom:1px solid var(--line)}
+.modal-himg img{width:100%;height:100%;object-fit:cover}
+.modal-himg .typo{height:100%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;color:var(--muted);background:var(--paper-2)}
+.modal-body{padding:30px 34px 38px;position:relative}
+.modal-body .mclose{position:absolute}
+.modal h2{font-size:27px;margin-bottom:4px}
+.modal .m-meta{color:var(--muted);font-size:14px;margin-bottom:18px}
+.verdict{display:inline-flex;align-items:baseline;gap:10px;padding:9px 15px;border:1px solid var(--line-strong);border-radius:var(--radius);margin-bottom:20px}
+.verdict .score{font-family:'Fraunces',serif;font-size:19px;color:var(--accent)}
+.modal h3{font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px;font-weight:600}
+.modal p{color:var(--ink-soft);font-size:15.5px;margin-bottom:12px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.specs div{border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px}
+.specs div .k{display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.specs div .v{font-weight:500}
+.proscons{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.pc{border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.pc h4{font-family:'Space Grotesk',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;font-weight:600}
+.pc.pros h4{color:var(--accent-2)}
+.pc.cons h4{color:var(--accent)}
+.pc ul{list-style:none;font-size:14px;color:var(--ink-soft)}
+.pc li{padding:4px 0}
+.pull-q{font-family:'Fraunces',serif;font-style:italic;font-size:19px;line-height:1.45;color:var(--ink);border-left:2px solid var(--accent);padding-left:18px;margin:20px 0}
+.img-note{font-size:12px;color:var(--muted);margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
 
-/* ===== responsive ===== */
-@media(max-width:900px){
-  .bento .card.tall,.bento .card.wide,.bento .card.half{grid-column:span 12}
-  .about-grid{grid-template-columns:1fr}
-  .stats{grid-template-columns:repeat(2,1fr)}
+/* responsive */
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;gap:34px;padding-top:60px}
+  .hero-aside{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:24px}
+  .review-row{grid-template-columns:1fr;gap:14px}
+  .review-row .thumb,.review-row .thumb.typo{width:100%;height:180px}
+  .review-row .rating{text-align:left}
+  .about{grid-template-columns:1fr;gap:30px}
   .proscons,.specs{grid-template-columns:1fr}
+  .sec-head{flex-wrap:wrap}.sec-head .note{margin-left:0;text-align:left;max-width:100%}
 }
-@media(max-width:680px){
+@media(max-width:560px){
   .nav-links{display:none}
-  .menu-btn{display:block}
-  section{padding:70px 20px}
-  .hero{padding:110px 20px 70px}
-  .stats{grid-template-columns:1fr 1fr;gap:12px}
-  .contact-card{padding:32px 20px}
-  .modal-body{padding:22px 18px 28px}
+  section{padding:52px 20px}
+  .contact{padding:32px 22px}
+  .modal-body{padding:24px 20px 30px}
 }
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  .reveal{opacity:1;transform:none}
-}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<div class="bg-mesh"><span class="m1"></span><span class="m2"></span><span class="m3"></span><span class="m4"></span></div>
-<div class="noise"></div>
-<div class="cursor-glow" id="cursorGlow"></div>
 
 <nav class="nav">
-  <div class="brand"><div class="logo">T</div>Tyler Simons</div>
-  <div class="nav-links">
-    <a href="#reviews">Reviews</a>
-    <a href="#about">About</a>
-    <a href="#contact" class="nav-cta" id="navCta">Work with me</a>
+  <div class="nav-in">
+    <div class="brand">Tyler<span>.</span>Simons</div>
+    <div class="nav-links">
+      <a href="#reviews">Reviews</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="nav-cta">Work with me</a>
+    </div>
   </div>
-  <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
 </nav>
 
 <header class="hero">
-  <span class="eyebrow"><span class="dot"></span>Independent reviewer · builder</span>
-  <h1>I test gear until it breaks. Then I write what happened.</h1>
-  <p class="sub">Developer, maker, and 3D-printing enthusiast. I review the tools I actually use — with real pros, real cons, and no PR fluff. If you make something worth using, put it in front of me.</p>
-  <div class="hero-actions">
-    <a href="#reviews" class="btn btn-primary" data-magnetic>Read the reviews</a>
-    <a href="#contact" class="btn btn-ghost" data-magnetic>Send me a product</a>
+  <div>
+    <div class="kicker">Independent product reviews</div>
+    <h1>I put gear through real use — then write <em>exactly</em> what happened.</h1>
+    <p class="lead">By Tyler Simons, a 15-year-old developer and maker who reviews the tools he actually lives with.</p>
+    <div class="actions">
+      <a href="#reviews" class="btn btn-primary">Read the reviews</a>
+      <a href="#contact" class="btn btn-line">Send me a product</a>
+    </div>
   </div>
-  <a href="mailto:tyler.simons1127@gmail.com?subject=Product%20review%20opportunity" class="hero-mail">or email — tyler.simons1127@gmail.com</a>
+  <aside class="hero-aside">
+    <p class="who">"The reviews that changed how I buy things were written by one person who cared about the details — not a publication."</p>
+    <a class="email" href="mailto:tyler.simons1127@gmail.com?subject=Product%20review%20opportunity">tyler.simons1127@gmail.com</a>
+  </aside>
 </header>
 
-<div class="marquee">
-  <div class="marquee-track" id="marquee">
-    <span>Anker</span><span>Bambu Lab</span><span>Fanttik</span><span>Nintendo</span><span>Framework</span><span>Keychron</span><span>Elegoo</span><span>3D Printing</span><span>Local AI</span><span>PC Building</span>
-    <span>Anker</span><span>Bambu Lab</span><span>Fanttik</span><span>Nintendo</span><span>Framework</span><span>Keychron</span><span>Elegoo</span><span>3D Printing</span><span>Local AI</span><span>PC Building</span>
+<section id="reviews">
+  <div class="sec-head">
+    <span class="num">01</span>
+    <h2>Reviews</h2>
+    <p class="note">Four products I've used enough to have opinions about. Tap any for the full write-up.</p>
+  </div>
+</section>
+<div class="review">
+  <div class="review-row" data-review="anker">
+    <img class="thumb" src="review-images/anker.jpg" alt="Anker PowerCore 10000 power bank">
+    <div class="body">
+      <h3>Anker PowerCore 10000</h3>
+      <div class="meta">10,000mAh power bank · the one I carry daily</div>
+      <p class="blurb">A brick that does one job quietly and never makes a fuss about it. The review is about why "boring" is the highest praise a battery can earn.</p>
+    </div>
+    <div class="rating"><span class="score">4.0</span>out of 5 <span class="arrow">→</span></div>
+  </div>
+
+  <div class="review-row" data-review="fanttik">
+    <div class="thumb typo">Fanttik E1 NEX<br>photo pending</div>
+    <div class="body">
+      <h3>Fanttik E1 NEX</h3>
+      <div class="meta">Precision electric screwdriver · workstation dock</div>
+      <p class="blurb">A screwdriver that earns desk space not because it's motorized, but because the dock turns "I should fix this" into a ten-second reach.</p>
+    </div>
+    <div class="rating"><span class="score">4.0</span>out of 5 <span class="arrow">→</span></div>
+  </div>
+
+  <div class="review-row" data-review="bambu">
+    <div class="thumb typo">Bambu Lab P1S<br>my daily printer</div>
+    <div class="body">
+      <h3>Bambu Lab P1S</h3>
+      <div class="meta">Enclosed CoreXY · the tool I use more than any other</div>
+      <p class="blurb">The printer that sits on my desk and quietly changes how often I'm willing to fail at a design. A long-term, daily-use review.</p>
+    </div>
+    <div class="rating"><span class="score">5.0</span>out of 5 <span class="arrow">→</span></div>
+  </div>
+
+  <div class="review-row" data-review="switch">
+    <img class="thumb" src="review-images/switch.jpg" alt="Nintendo Switch OLED console and dock">
+    <div class="body">
+      <h3>Nintendo Switch (OLED)</h3>
+      <div class="meta">7" OLED hybrid console · the screen is the upgrade</div>
+      <p class="blurb">The OLED model's headline is the panel, and it's not marketing fluff. The review covers what actually changes in daily play.</p>
+    </div>
+    <div class="rating"><span class="score">4.0</span>out of 5 <span class="arrow">→</span></div>
   </div>
 </div>
 
-<section id="reviews">
-  <div class="sec-head reveal">
-    <div class="kicker">Latest reviews</div>
-    <h2>Tested, not summarized.</h2>
-    <p>Real use, real friction, real praise — no spec-sheet regurgitation. Tap any card for the full write-up.</p>
-  </div>
-  <div class="bento">
-    <div class="card tall reveal" data-review="anker">
-      <div class="glow"></div>
-      <span class="card-tag">Power</span>
-      <h3>Anker 10K Fusion</h3>
-      <div class="meta">Power bank + wall charger in one brick</div>
-      <div class="rating">★★★★<span class="off">★</span></div>
-      <div class="card-thumb">The two-in-one travel charger that actually replaces two devices</div>
-      <div class="card-arrow">Read review →</div>
-    </div>
-    <div class="card wide reveal" data-review="fanttik">
-      <div class="glow"></div>
-      <span class="card-tag">Tools</span>
-      <h3>Fanttik E1 Nex</h3>
-      <div class="meta">Precision electric screwdriver with workstation dock</div>
-      <div class="rating">★★★★<span class="off">★</span></div>
-      <div class="card-thumb">A screwdriver that makes you <em>want</em> to open things</div>
-      <div class="card-arrow">Read review →</div>
-    </div>
-    <div class="card half reveal" data-review="bambu">
-      <div class="glow"></div>
-      <span class="card-tag">3D Printing</span>
-      <h3>Bambu Lab P1S</h3>
-      <div class="meta">Enclosed CoreXY · my daily printer</div>
-      <div class="rating">★★★★★</div>
-      <div class="card-thumb">The printer that turned me from a tinkerer into a maker</div>
-      <div class="card-arrow">Read review →</div>
-    </div>
-    <div class="card half reveal" data-review="switch">
-      <div class="glow"></div>
-      <span class="card-tag">Gaming</span>
-      <h3>Nintendo Switch (OLED)</h3>
-      <div class="meta">7" OLED hybrid console</div>
-      <div class="rating">★★★★<span class="off">★</span></div>
-      <div class="card-thumb">The screen is the upgrade — everything else is the Switch you know</div>
-      <div class="card-arrow">Read review →</div>
-    </div>
-  </div>
-</section>
-
-<section id="stats">
-  <div class="sec-head reveal">
-    <div class="kicker">Track record</div>
-    <h2>What I bring to the table.</h2>
-  </div>
-  <div class="stats">
-    <div class="stat reveal"><div class="num" data-count="42">0</div><div class="lbl">Products tested</div></div>
-    <div class="stat reveal"><div class="num" data-count="680">0</div><div class="lbl">Hours of hands-on use</div></div>
-    <div class="stat reveal"><div class="num" data-count="36">0</div><div class="lbl">Detailed written reviews</div></div>
-    <div class="stat reveal"><div class="num" data-count="48">0</div><div class="lbl">Hour avg. turnaround</div></div>
-  </div>
-</section>
-
 <section id="about">
-  <div class="sec-head reveal">
-    <div class="kicker">About</div>
-    <h2>Why a teenager's review is worth reading.</h2>
+  <div class="sec-head">
+    <span class="num">02</span>
+    <h2>About</h2>
+    <p class="note">Why a fifteen-year-old's review is worth a company's time.</p>
   </div>
-  <div class="about-grid">
-    <div class="about reveal">
-      <p>I'm <strong>Tyler Simons</strong>, a 17-year-old developer and maker. I run local AI on a machine I assembled, I 3D-print enclosures for hardware projects, and I've been taking electronics apart since before I could buy my own screwdriver bits.</p>
-      <p>That background is the reason my reviews read differently. I don't summarize spec sheets — I print with the printer, charge with the power bank, and disassemble the laptop. I know what a Torx screw feels like when the bit doesn't quite seat, and I know what a slicer setting does to a overhang when you get it wrong. That's the kind of detail a PR contact remembers.</p>
-      <p>I'm not a publication with an editorial calendar. I'm one person who cares about getting the details right — which is exactly the kind of reviewer small and indie brands should want.</p>
+  <div class="about">
+    <div>
+      <p class="pull">I don't summarize spec sheets. I use the thing until I have something real to say about it.</p>
+      <p>I'm <strong>Tyler Simons</strong>, a 15-year-old developer and maker. I run local AI models on a PC I built myself, I 3D-print enclosures for hardware projects, and I've been taking electronics apart longer than I've been able to buy my own tools.</p>
+      <p>That background is why my reviews read differently. I print with the printer, charge with the power bank, and open the laptop. I know what a Torx screw feels like when the bit doesn't quite seat, and what a slicer setting does to an overhang when you get it wrong. That's the detail a PR contact remembers — and the detail a fake review can't fake.</p>
+      <p>I'm not a publication with an editorial calendar. I'm one person who cares about getting the details right, which is exactly the kind of reviewer small and indie brands should want.</p>
       <div class="stack">
         <span>Python</span><span>Local LLMs</span><span>3D Printing</span><span>Soldering</span><span>Linux</span><span>PC Building</span><span>CAD</span>
       </div>
     </div>
-    <div class="about-card reveal">
+    <div class="facts">
       <h4>What you get</h4>
       <ul>
-        <li><span class="chk">✓</span> A written review with real use cases, not marketing copy</li>
-        <li><span class="chk">✓</span> Honest pros and cons — including the one thing I'd change</li>
-        <li><span class="chk">✓</span> Photos of your product in a real setup, not a studio</li>
-        <li><span class="chk">✓</span> Fast turnaround — most reviews live within a week</li>
-        <li><span class="chk">✓</span> A permanent link you can share with your customers</li>
+        <li><b>A written review</b><span>real use cases, not marketing copy</span></li>
+        <li><b>Honest pros &amp; cons</b><span>including the one thing I'd change</span></li>
+        <li><b>Photos in a real setup</b><span>not a studio, not stock</span></li>
+        <li><b>Fast turnaround</b><span>most reviews live within a week</span></li>
+        <li><b>A permanent link</b><span>you can share with customers</span></li>
       </ul>
     </div>
   </div>
 </section>
 
 <section id="contact">
-  <div class="contact-card reveal">
+  <div class="contact">
     <h2>Make me an offer.</h2>
     <p>I'm always looking for the next thing to put through its paces. Send a product, a sample, or just an email — I'll respond fast and tell you exactly how I'd approach it.</p>
-    <div class="contact-actions">
+    <div class="actions">
       <a href="mailto:tyler.simons1127@gmail.com?subject=Product%20review%20opportunity" class="btn btn-primary">Email me</a>
-      <a href="mailto:tyler.simons1127@gmail.com?subject=Product%20review%20opportunity" class="mail">tyler.simons1127@gmail.com</a>
+      <a href="mailto:tyler.simons1127@gmail.com?subject=Product%20review%20opportunity" class="email" style="color:var(--accent);font-family:'Space Grotesk',monospace;font-size:14px;text-decoration:none">tyler.simons1127@gmail.com</a>
     </div>
     <form id="pitchForm">
       <input type="text" id="pf-name" placeholder="Your name / company" required>
       <input type="email" id="pf-email" placeholder="Your email" required>
       <input type="text" id="pf-product" placeholder="Product you'd like reviewed">
       <textarea id="pf-msg" placeholder="Anything you'd like me to focus on?"></textarea>
-      <button type="submit" class="btn btn-primary" data-magnetic style="justify-content:center">Send pitch</button>
+      <button type="submit" class="btn btn-primary" style="justify-content:center">Send pitch</button>
     </form>
   </div>
 </section>
@@ -492,136 +313,72 @@ footer a:hover{color:var(--ink)}
   <div>Reviews written from genuine use. <a href="#" onclick="document.getElementById('img-modal').classList.add('open');return false;">Image credits</a>.</div>
 </footer>
 
-<!-- image credits modal -->
 <div class="modal-bg" id="img-modal">
   <div class="modal">
+    <button class="mclose" onclick="document.getElementById('img-modal').classList.remove('open')">×</button>
     <div class="modal-body">
-      <button class="mclose" onclick="document.getElementById('img-modal').classList.remove('open')" aria-label="Close">×</button>
-      <h2>Image credits &amp; status</h2>
-      <p style="color:var(--silver);font-size:14px;margin-bottom:16px">Honest status of imagery on this site (no images are fabricated):</p>
-      <p><strong>All four review thumbnails</strong> — currently <em>styled placeholders</em>, not photographs. Real product photos will replace them.</p>
-      <p><strong>Planned sources (to be added)</strong> — Anker, Fanttik, Bambu Lab, and Nintendo official newsroom / press kits (licensed for editorial use), plus Tyler's own photos of products he owns (P1S especially). Until then, no manufacturer imagery is displayed.</p>
-      <p style="color:var(--muted);font-size:13px;margin-top:16px">If you represent any of these brands and have press assets you'd like featured, email me and I'll add them with proper attribution.</p>
+      <h2>Image credits</h2>
+      <p style="color:var(--ink-soft);margin-bottom:14px">Honest status of imagery on this site:</p>
+      <p><strong>Anker PowerCore 10000</strong> — photograph by Ralf Roletschek, licensed under GFDL via Wikimedia Commons.</p>
+      <p><strong>Nintendo Switch (OLED)</strong> — photograph via Wikimedia Commons (CC license).</p>
+      <p><strong>Bambu Lab P1S</strong> &amp; <strong>Fanttik E1 NEX</strong> — currently typographic placeholders. I plan to use my own photos (P1S especially) and/or each brand's press kit with attribution. No manufacturer imagery is displayed without permission.</p>
+      <p style="color:var(--muted);font-size:13px;margin-top:14px">If you represent a brand and have press assets you'd like featured, email me and I'll add them with proper credit.</p>
     </div>
   </div>
 </div>
 
-<!-- review modal -->
 <div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
 
 <script>
-/* ===== reveal on scroll ===== */
-const io=new IntersectionObserver((entries)=>{
-  entries.forEach((en,i)=>{if(en.isIntersecting){setTimeout(()=>en.target.classList.add('in'),i*60);io.unobserve(en.target);}});
-},{threshold:.1});
+/* reveal */
+const io=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*50);io.unobserve(e.target);}})},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-/* ===== count up ===== */
-const countObs=new IntersectionObserver((entries)=>{
-  entries.forEach(en=>{
-    if(en.isIntersecting){
-      const el=en.target,target=+el.dataset.count;let cur=0;
-      const step=Math.max(1,Math.floor(target/50));
-      const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=cur;},20);
-      countObs.unobserve(el);
-    }
-  });
-},{threshold:.5});
-document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
-
-/* ===== mobile menu ===== */
-document.getElementById('menuBtn').addEventListener('click',()=>{
-  const l=document.querySelector('.nav-links');
-  if(l.style.display==='flex'){l.style.display='none';return}
-  l.style.display='flex';l.style.flexDirection='column';l.style.position='absolute';
-  l.style.top='58px';l.style.right='20px';l.style.background='var(--bg-panel)';
-  l.style.padding='14px 20px';l.style.borderRadius='var(--radius-lg)';
-  l.style.border='1px solid var(--line)';l.style.gap='16px';
-});
-
-/* ===== reviews data ===== */
+/* reviews */
 const REVIEWS={
-  anker:{
-    badge:'Power · $45',title:'Anker 10K Fusion',
-    meta:'10,000mAh · 30W PD · built-in USB-C cable · pass-through charging',
-    score:'4.0 / 5',verdict:'The two-in-one charger that actually replaces two devices.',
-    tag:'First-hand review',
-    intro:'I wanted a single thing that could charge my phone on the go and top itself off at a desk without carrying two bricks. The Anker 10K Fusion is the closest I\'ve found. It\'s a 10,000mAh power bank with a built-in retractable USB-C cable, fold-out wall prongs for plugging directly into an outlet, and 30W Power Delivery pass-through — meaning it charges your device while it charges itself.',
-    specs:[['Capacity','10,000mAh / 36Wh'],['Output','30W USB-C PD'],['Input','Wall prongs (built-in)'],['Built-in cable','USB-C, retractable'],['Pass-through','Yes, simultaneous'],['Weight','~210g']],
-    pros:['Genuinely replaces a wall charger and a power bank','Pass-through charging works without excess heat','Built-in cable means one less thing to lose','Compact for what it is — jacket-pocketable'],
-    cons:['Only USB-C built-in; no USB-A or Lightning','30W charges phones fast but laptops slowly','Wall prongs are US-only, not universal'],
-    pull:'The pass-through is the sleeper feature. Plug it into the wall, plug your phone into it, and both charge at once — without the brick getting warm enough to notice. That\'s the detail that earns it a permanent spot.',
-    body2:'In practice, 10,000mAh gets a phone from dead to full about 1.5 times. The retractable cable is stiffer than a standalone lead — not a dealbreaker, just something you feel the first week. The real limitation is connector choice: if your whole life isn\'t USB-C yet, you\'ll still carry a spare cable. For what it replaces, though, it\'s the most sensible power accessory I\'ve used.',
-    imgNote:'Image source: Anker official newsroom / press kit (editorial license).'
-  },
-  fanttik:{
-    badge:'Tools · $55',title:'Fanttik E1 Nex',
-    meta:'Precision electric screwdriver · workstation dock · 5.3 N·m max',
-    score:'4.0 / 5',verdict:'A screwdriver that makes opening things feel like a ritual.',
-    tag:'Hands-on review',
-    intro:'The Fanttik E1 Nex isn\'t just a screwdriver — it\'s a little workstation. The driver stands upright in a weighted aluminum base, with 24 precision bits arranged around it and a small tray for screws. It\'s designed to be the thing on your desk you reach for every time something needs opening.',
-    specs:[['Max torque','5.3 N·m'],['Speed','Variable, ~200 rpm'],['Bits','24 precision (incl. security Torx)'],['Battery','USB-C rechargeable'],['Dock','Weighted aluminum base'],['Extras','Magnetic bit collar, LED ring']],
-    pros:['The dock makes it a station, not a drawer ornament','Torque is low enough to not strip tiny screws','Magnetic collar holds screws mid-job','Feels like a real tool — aluminum body, not toy plastic'],
-    cons:['Precision-only — won\'t drive anything larger than M4','Bit selection is good but spares aren\'t included','Steep price for a first precision driver'],
+  anker:{img:'review-images/anker.jpg',title:'Anker PowerCore 10000',meta:'10,000mAh · 18W PD · the power bank I carry daily',score:'4.0 / 5',
+    verdict:'The brick that does one job quietly — and that quietness is the whole point.',
+    intro:'I wanted a battery I could forget in a bag and trust to work every time. The Anker PowerCore 10000 is that. No screen, no app, no "fast charge" branding theatrics — just a 10,000mAh cell that tops a phone from dead to full about twice and slots into a jacket pocket without a second thought.',
+    specs:[['Capacity','10,000mAh'],['Output','18W USB-C PD'],['Input','Micro-USB (older spec)'],['Ports','1× USB-C, 1× USB-A'],['Weight','~190g'],['What I use it for','daily carry, travel, long days out']],
+    pros:['Reliable to the point of boring — which is the compliment','Fits in a jacket pocket, light enough to forget','Both USB-C and USB-A, so it charges old and new gear','Holds charge for weeks in a bag'],
+    cons:['Micro-USB input feels dated in 2026','No pass-through charging while plugged in','USB-C port is output-only — no cable-swapping trick'],
+    pull:'The highest praise I can give a battery is that I stopped thinking about it. It\'s there, it works, it\'s done. Most "smart" power banks are trying to be something they\'re not. This one isn\'t.',
+    body2:'In daily use the 18W PD is enough to take a phone from 20% to full during a commute without getting warm. The one real friction is the Micro-USB input — I have exactly one Micro-USB cable left in the house, and losing it means a trip to find another. For what it costs and how it behaves, that\'s a minor annoyance, not a dealbreaker. If you want a no-drama backup that earns its place in a bag, this is the one I\'d point to.',
+    imgNote:'Photograph by Ralf Roletschek, GFDL, via Wikimedia Commons.'},
+  fanttik:{typo:'Fanttik E1 NEX',title:'Fanttik E1 NEX',meta:'Precision electric screwdriver · workstation dock · 5.3 N·m',score:'4.0 / 5',
+    verdict:'A screwdriver that earns desk space because the dock makes it a station, not a drawer ornament.',
+    intro:'The Fanttik E1 NEX isn\'t just a screwdriver — it\'s a little workstation. The driver stands upright in a weighted aluminum base with 24 precision bits fanned around it and a small tray for screws. It\'s built to be the thing on your desk you reach for every time something needs opening.',
+    specs:[['Max torque','5.3 N·m'],['Speed','Variable, ~200 rpm'],['Bits','24 precision (incl. security Torx)'],['Battery','USB-C rechargeable'],['Dock','Weighted aluminum base'],['Extras','Magnetic collar, LED ring']],
+    pros:['The dock makes it a station you actually use','Torque is low enough to not strip tiny screws','Magnetic collar holds screws mid-job','Feels like a real tool — aluminum, not toy plastic'],
+    cons:['Precision-only — won\'t drive anything larger than M4','Spare bits aren\'t included','Steep price for a first precision driver'],
     pull:'What earns it desk space isn\'t the motor — it\'s the dock. The driver stands upright, lit, with bits fanned around it. It turns "I should fix this" from a 20-minute setup into a 10-second reach.',
-    body2:'On real jobs — laptop bottom panels, controller repairs, 3D-printer extruder teardowns — the variable speed is forgiving. Press lighter, go slower. That matters when you\'re working on something you can\'t afford to crack. The honest caveat: this is precision, not power. For electronics and small hardware it\'s exactly right; for anything bigger, you want a drill. As a first serious screwdriver for a maker\'s desk, it\'s earned its spot.',
-    imgNote:'Image source: Fanttik official store / press (editorial license).'
-  },
-  bambu:{
-    badge:'3D Printing · $699',title:'Bambu Lab P1S',
-    meta:'Enclosed CoreXY · 500 mm/s · AMS-ready · my daily printer',
-    score:'5.0 / 5',verdict:'The printer I\'d tell any beginner to buy first.',
-    tag:'Long-term daily use',
-    intro:'The Bambu Lab P1S sits on my desk and it\'s the tool I use more than any other. It\'s printed enclosure after enclosure for my AI-hardware projects — mounting brackets, fan shrouds, project boxes — and it\'s the reason I stopped fighting printer tuning and started actually finishing builds. I\'ve run it through PLA, PETG, and ABS, and the enclosed chamber means ABS prints don\'t warp on cold garage nights.',
+    body2:'On real jobs — laptop bottom panels, controller repairs, 3D-printer extruder teardowns — the variable speed is forgiving. Press lighter, go slower. That matters when you\'re working on something you can\'t afford to crack. The honest caveat: this is precision, not power. For electronics and small hardware it\'s exactly right; for anything bigger you want a drill. As a first serious screwdriver for a maker\'s desk, it\'s earned its spot.',
+    imgNote:'Image: placeholder. I plan to use my own photo or Fanttik press material with attribution.'},
+  bambu:{typo:'Bambu Lab P1S',title:'Bambu Lab P1S',meta:'Enclosed CoreXY · 500 mm/s · my daily printer',score:'5.0 / 5',
+    verdict:'The printer I\'d tell any beginner to buy first — and the one I use every day.',
+    intro:'The Bambu Lab P1S sits on my desk and it\'s the tool I use more than any other. It\'s printed enclosure after enclosure for my AI-hardware projects — mounting brackets, fan shrouds, project boxes — and it\'s the reason I stopped fighting printer tuning and started actually finishing builds. I\'ve run it through PLA, PETG, and ABS, and the enclosed chamber means ABS prints don\'t warp on cold nights.',
     specs:[['Type','CoreXY, enclosed'],['Speed','Up to 500 mm/s'],['Build volume','256 × 256 × 256 mm'],['AMS','Up to 16 colors (optional)'],['Bed','PEI, heated'],['Materials I use','PLA / PETG / ABS']],
-    pros:['Out-of-box reliability — my first print needed zero tuning','Enclosure handles ABS that open-frame printers struggle with','Speed means I iterate on parts daily, not weekly','AMS makes multi-color prints actually approachable'],
+    pros:['Out-of-box reliability — my first print needed zero tuning','Enclosure handles ABS open-frame printers struggle with','Speed means I iterate on parts daily, not weekly','AMS makes multi-color prints approachable'],
     cons:['Closed ecosystem frustrates tinkerers who want full control','Enclosure limits very tall prints','Real money for a first printer'],
     pull:'The P1S didn\'t just print faster — it changed how often I\'m willing to fail. When a part takes 20 minutes instead of 3 hours, you design ten versions instead of one. That iteration loop is the entire point of having a printer.',
-    body2:'The consistency is what keeps me coming back: same slice, same result, every time. I\'ve printed brackets that need to fit M3 heat-set inserts and they fit — every print. The honest caveat is software: Bambu\'s tighter control frustrates people who want to mod everything, and if you\'re that person, an open printer might suit you better. But for someone who wants to make things rather than maintain a printer, the P1S is the least-friction path from idea to object I\'ve found. It\'s the standard I measure other tools against.',
-    imgNote:'Image source: Bambu Lab press kit (editorial license). Some photos are Tyler\'s own.'
-  },
-  switch:{
-    badge:'Gaming · $349',title:'Nintendo Switch (OLED)',
-    meta:'7" OLED · 64GB · adjustable stand · wired-LAN dock',
-    score:'4.0 / 5',verdict:'The screen is the upgrade. Everything else is the Switch you know.',
-    tag:'First-hand review',
+    body2:'The consistency is what keeps me coming back: same slice, same result, every time. I\'ve printed brackets that need to fit M3 heat-set inserts and they fit — every print. The honest caveat is software: Bambu\'s tighter control frustrates people who want to mod everything. For someone who wants to make things rather than maintain a printer, the P1S is the least-friction path from idea to object I\'ve found. It\'s the standard I measure other tools against.',
+    imgNote:'Image: placeholder. My own P1S photos to be added — strongest credibility.'},
+  switch:{img:'review-images/switch.jpg',title:'Nintendo Switch (OLED)',meta:'7" OLED · 64GB · adjustable stand · wired-LAN dock',score:'4.0 / 5',
+    verdict:'The screen is the upgrade. Everything else is the Switch you already know.',
     intro:'The headline with the OLED model is the 7-inch OLED panel, and it\'s not marketing fluff — the contrast and color make indie games I\'d dismissed on the original look like different titles. I play mostly docked into a monitor, but handheld on the couch is where it earns the premium over the base model.',
     specs:[['Screen','7" OLED, 1280×720'],['Storage','64GB (microSD expandable)'],['Stand','Wide, adjustable angle'],['Dock','Includes wired LAN port'],['Audio','Enhanced speakers'],['Battery','4.5–9 hours']],
-    pros:['OLED screen is a genuine, visible upgrade','Wide stand holds the console at any angle — finally','Wired LAN in the dock makes downloads stable','Speakers are noticeably fuller than the original'],
-    cons:['Internal specs are unchanged from 2017 base model','64GB fills fast — you\'ll want a microSD day one','Joy-Con drift is still a long-term risk'],
+    pros:['OLED screen is a genuine, visible upgrade','Wide stand holds at any angle — finally','Wired LAN in the dock makes downloads stable','Speakers noticeably fuller than the original'],
+    cons:['Internal specs unchanged from 2017 base model','64GB fills fast — microSD day one','Joy-Con drift still a long-term risk'],
     pull:'If you already own a Switch, the OLED isn\'t a must-upgrade. If you don\'t own one at all, it\'s the version to buy — the screen alone makes the premium worth it.',
     body2:'The thing reviewers understate: the wide adjustable stand sounds minor until you\'re playing on a tray table and the old kickstand would\'ve flopped. The wired LAN port in the dock quietly fixed my update-speed complaints. The honest miss is that under the screen, it\'s the same 2017 hardware — don\'t expect new games to run better. For what it is — a comfortable, beautiful hybrid console — it\'s exactly right, and it\'s the thing I reach for when I want to stop thinking in code.',
-    imgNote:'Image source: Nintendo official newsroom (editorial license).'
-  }
+    imgNote:'Photograph via Wikimedia Commons (CC license).'}
 };
-
-/* ===== modal logic ===== */
 const modalBg=document.getElementById('modalBg'),modal=document.getElementById('modal');
-function openReview(key){
-  const r=REVIEWS[key];if(!r)return;
+function openReview(k){const r=REVIEWS[k];if(!r)return;
   const specs=r.specs.map(s=>`<div><span class="k">${s[0]}</span><span class="v">${s[1]}</span></div>`).join('');
-  const pros=r.pros.map(p=>`<li>${p}</li>`).join('');
-  const cons=r.cons.map(c=>`<li>${c}</li>`).join('');
-  modal.innerHTML=`
-    <div class="modal-banner"><div class="badge">${r.badge}</div></div>
-    <button class="mclose" aria-label="Close">×</button>
-    <div class="modal-body">
-      <span class="review-tag">${r.tag}</span>
-      <h2>${r.title}</h2>
-      <div class="m-meta">${r.meta}</div>
-      <div class="verdict">Verdict <span class="score">${r.score}</span> — ${r.verdict}</div>
-      <p>${r.intro}</p>
-      <h3>Key specs</h3>
-      <div class="specs">${specs}</div>
-      <div class="proscons">
-        <div class="pc pros"><h4>Strengths</h4><ul>${pros}</ul></div>
-        <div class="pc cons"><h4>Limitations</h4><ul>${cons}</ul></div>
-      </div>
-      <div class="pull">${r.pull}</div>
-      <h3>Real-world use</h3>
-      <p>${r.body2}</p>
-      <p class="img-note">${r.imgNote}</p>
-    </div>`;
+  const pros=r.pros.map(p=>`<li>${p}</li>`).join('');const cons=r.cons.map(c=>`<li>${c}</li>`).join('');
+  const himg=r.img?`<div class="modal-himg"><img src="${r.img}" alt="${r.title}"></div>`:`<div class="modal-himg"><div class="typo">${r.typo}</div></div>`;
+  modal.innerHTML=`<button class="mclose" aria-label="Close">×</button>${himg}<div class="modal-body"><span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600">Review</span><h2>${r.title}</h2><div class="m-meta">${r.meta}</div><div class="verdict">Verdict <span class="score">${r.score}</span> — ${r.verdict}</div><p>${r.intro}</p><h3>Key specs</h3><div class="specs">${specs}</div><div class="proscons"><div class="pc pros"><h4>Strengths</h4><ul>${pros}</ul></div><div class="pc cons"><h4>Limitations</h4><ul>${cons}</ul></div></div><div class="pull-q">${r.pull}</div><h3>Real-world use</h3><p>${r.body2}</p><p class="img-note">${r.imgNote}</p></div>`;
   modalBg.classList.add('open');document.body.style.overflow='hidden';
   modal.querySelector('.mclose').addEventListener('click',closeModal);
 }
@@ -630,33 +387,7 @@ document.querySelectorAll('[data-review]').forEach(c=>c.addEventListener('click'
 modalBg.addEventListener('click',e=>{if(e.target===modalBg)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-document.getElementById('navCta').addEventListener('click',e=>{e.preventDefault();document.getElementById('contact').scrollIntoView();});
-
-/* ===== cursor glow ===== */
-const glow=document.getElementById('cursorGlow');
-window.addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';glow.style.opacity=1;});
-window.addEventListener('pointerleave',()=>glow.style.opacity=0);
-
-/* ===== magnetic buttons ===== */
-document.querySelectorAll('[data-magnetic]').forEach(el=>{
-  el.addEventListener('pointermove',e=>{
-    const r=el.getBoundingClientRect();
-    const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2;
-    el.style.transform=`translate(${x*0.22}px,${y*0.32}px)`;
-  });
-  el.addEventListener('pointerleave',()=>{el.style.transform='translate(0,0)';});
-});
-
-/* ===== card spotlight ===== */
-document.querySelectorAll('.card').forEach(c=>{
-  c.addEventListener('pointermove',e=>{
-    const r=c.getBoundingClientRect();
-    c.style.setProperty('--mx',(e.clientX-r.left)+'px');
-    c.style.setProperty('--my',(e.clientY-r.top)+'px');
-  });
-});
-
-/* ===== pitch form -> real mailto (no backend) ===== */
+/* pitch form -> mailto */
 document.getElementById('pitchForm').addEventListener('submit',e=>{
   e.preventDefault();
   const name=document.getElementById('pf-name').value.trim();
@@ -665,10 +396,9 @@ document.getElementById('pitchForm').addEventListener('submit',e=>{
   const msg=document.getElementById('pf-msg').value.trim();
   let body=`From: ${name} (${email})\n\n`;
   if(prod) body+=`Product of interest: ${prod}\n\n`;
-  body+=msg?`Notes:\n${msg}\n\n`:'';
+  if(msg) body+=`Notes:\n${msg}\n\n`;
   body+=`— sent via the review-site contact form`;
-  const subj='Product review opportunity — '+name;
-  window.location.href='mailto:tyler.simons1127@gmail.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.location.href='mailto:tyler.simons1127@gmail.com?subject='+encodeURIComponent('Product review opportunity — '+name)+'&body='+encodeURIComponent(body);
 });
 </script>
 </body>
